@@ -12,7 +12,9 @@ spring:
       show_sql: true
       format_sql: true
 
-h2:
-  console:
+  h2:
+   console:
     enabled: true
     path: /h2
+
+
