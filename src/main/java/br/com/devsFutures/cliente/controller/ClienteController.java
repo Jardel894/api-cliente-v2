@@ -1,5 +1,7 @@
 package br.com.devsFutures.cliente.controller;
 
+import br.com.devsFutures.cliente.dto.request.ClienteNovoRequestDto;
+import br.com.devsFutures.cliente.dto.response.ClienteResponseDto;
 import br.com.devsFutures.cliente.entities.Cliente;
 import br.com.devsFutures.cliente.service.ClienteService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +22,8 @@ public class ClienteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente criar (@RequestBody Cliente clienteNovo){
-      return clienteService.criar(clienteNovo);
+    public ClienteResponseDto criar(@RequestBody ClienteNovoRequestDto clienteNovoRequestDto){
+        return clienteService.criar(clienteNovoRequestDto);
     }
 
     @GetMapping
