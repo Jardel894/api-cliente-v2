@@ -1,5 +1,8 @@
 package br.com.devsFutures.cliente.service.serviceImpl;
 
+import br.com.devsFutures.cliente.converter.ClienteConverter;
+import br.com.devsFutures.cliente.dto.request.ClienteNovoRequestDto;
+import br.com.devsFutures.cliente.dto.response.ClienteResponseDto;
 import br.com.devsFutures.cliente.entities.Cliente;
 import br.com.devsFutures.cliente.repository.ClienteRepository;
 import br.com.devsFutures.cliente.service.ClienteService;
@@ -15,12 +18,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ClienteServiceImpl implements ClienteService {
 
-
     private final ClienteRepository clienteRepository;
 
     @Override
-    public Cliente criar(Cliente cliente) {
-        return clienteRepository.save(cliente);
+    public ClienteResponseDto criar(ClienteNovoRequestDto clienteNovoRequestDto) {
+        Cliente cliente = ClienteConverter.toCliente(clienteNovoRequestDto);
+        clienteRepository.save(cliente);
+        return ClienteConverter.toClienteResponseDto(cliente);
     }
 
     @Override

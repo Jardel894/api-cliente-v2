@@ -9,6 +9,7 @@ import java.util.UUID;
 @Table(name = "tb_cliente")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cliente {
@@ -20,7 +21,7 @@ public class Cliente {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 14)
     private String cpf;
 
     @Column(nullable = false, unique = true)
