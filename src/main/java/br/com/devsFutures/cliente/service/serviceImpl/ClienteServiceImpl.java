@@ -2,6 +2,7 @@ package br.com.devsFutures.cliente.service.serviceImpl;
 
 import br.com.devsFutures.cliente.converter.ClienteConverter;
 import br.com.devsFutures.cliente.dto.request.ClienteNovoRequestDto;
+import br.com.devsFutures.cliente.dto.request.ClientePutRequestDto;
 import br.com.devsFutures.cliente.dto.response.ClienteResponseDto;
 import br.com.devsFutures.cliente.entities.Cliente;
 import br.com.devsFutures.cliente.repository.ClienteRepository;
@@ -11,8 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +31,9 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Page<Cliente> consultar(Pageable pageable) {
-        return clienteRepository.findAll(pageable);
+    public Page<ClienteResponseDto> consultar(Pageable pageable) {
+           Page<Cliente> clientePage = clienteRepository.findAll(pageable);
+           return clientePage.map(ClienteConverter::toClienteResponseDto);
     }
 
     @Override
@@ -54,5 +58,41 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public void excluirPorCpf(String cpf) {
         clienteRepository.deleteByCpf(cpf);
+    }
+    @Override
+    @Transactional
+    public void excluirPorUuid(UUID uuid) {
+        clienteRepository.deleteById(uuid);
+    }
+    @Override
+    @Transactional
+    public void excluirPorEmail(String email) {
+        clienteRepository.deleteByEmail(email);
+    }
+
+    public ClienteResponseDto atualizarPorUuid(ClientePutRequestDto clientePutRequestDto, UUID uuid){
+        Cliente clienteSalvo = clienteRepository.findById(uuid)
+                .orElseThrow(() -> new RuntimeException("Cliente não existe"));
+        return getClienteResponseDto(clientePutRequestDto, clienteSalvo);
+    }
+    public ClienteResponseDto atualizarPorCpf(ClientePutRequestDto clientePutRequestDto, String cpf){
+        Cliente clienteSalvo = clienteRepository.buscaClientePorDocumento(cpf)
+                .orElseThrow(() -> new RuntimeException("Cliente não existe"));
+        return getClienteResponseDto(clientePutRequestDto, clienteSalvo);
+    }
+
+    public ClienteResponseDto atualizarPorEmail(ClientePutRequestDto clientePutRequestDto, String email){
+        Cliente clienteSalvo = clienteRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Cliente não existe"));
+        return getClienteResponseDto(clientePutRequestDto, clienteSalvo);
+    }
+
+    private ClienteResponseDto getClienteResponseDto(ClientePutRequestDto clientePutRequestDto, Cliente clienteSalvo) {
+        clienteSalvo.setNome(clientePutRequestDto.getNome() == null ? clienteSalvo.getNome() : clientePutRequestDto.getNome());
+        clienteSalvo.setTelefone(clientePutRequestDto.getTelefone() == null ? clienteSalvo.getTelefone() : clientePutRequestDto.getTelefone());
+        clienteSalvo.setEndereco(clientePutRequestDto.getEndereco() == null ? clienteSalvo.getEndereco() : clientePutRequestDto.getEndereco());
+        clienteSalvo.setEmail(clientePutRequestDto.getEmail() == null ? clienteSalvo.getEmail() : clientePutRequestDto.getEmail());
+        clienteRepository.save(clienteSalvo);
+        return ClienteConverter.toClienteResponseDto(clienteSalvo);
     }
 }
