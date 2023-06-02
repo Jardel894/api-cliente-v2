@@ -1,9 +1,11 @@
 package br.com.devsFutures.cliente.controller;
 
 import br.com.devsFutures.cliente.dto.request.ClienteNovoRequestDto;
+import br.com.devsFutures.cliente.dto.request.ClientePutRequestDto;
 import br.com.devsFutures.cliente.dto.response.ClienteResponseDto;
 import br.com.devsFutures.cliente.entities.Cliente;
 import br.com.devsFutures.cliente.service.ClienteService;
+import ch.qos.logback.core.net.server.Client;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +30,7 @@ public class ClienteController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<Cliente> consultar(Pageable pageable){
+    public Page<ClienteResponseDto> consultar(Pageable pageable){
         return clienteService.consultar(pageable);
     }
 
@@ -54,6 +56,33 @@ public class ClienteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluirPorCpf(@PathVariable("cpf") String cpf){
          clienteService.excluirPorCpf(cpf);
+    }  @DeleteMapping("/uuid/{uuid}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluirPorUuid(@PathVariable("uuid") UUID uuid){
+         clienteService.excluirPorUuid(uuid);
+    }  @DeleteMapping("/email/{email}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluirPorEmail(@PathVariable("email") String email){
+         clienteService.excluirPorEmail(email);
     }
+
+    @PutMapping("/uuid/{uuid}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ClienteResponseDto atualizarPorUuid(@RequestBody ClientePutRequestDto clientePutRequestDto, @PathVariable("uuid") UUID uuid){
+      return clienteService.atualizarPorUuid(clientePutRequestDto,uuid);
+    }
+
+    @PutMapping("/email/{email}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ClienteResponseDto atualizarPorEmail(@RequestBody ClientePutRequestDto clientePutRequestDto, @PathVariable("email") String email){
+      return clienteService.atualizarPorEmail(clientePutRequestDto,email);
+    }
+
+    @PutMapping("/cpf/{cpf}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ClienteResponseDto atualizarPorCpf(@RequestBody ClientePutRequestDto clientePutRequestDto, @PathVariable("cpf") String cpf){
+      return clienteService.atualizarPorCpf(clientePutRequestDto,cpf);
+    }
+
 
 }
