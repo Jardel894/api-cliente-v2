@@ -73,26 +73,30 @@ public class ClienteServiceImpl implements ClienteService {
     public ClienteResponseDto atualizarPorUuid(ClientePutRequestDto clientePutRequestDto, UUID uuid){
         Cliente clienteSalvo = clienteRepository.findById(uuid)
                 .orElseThrow(() -> new RuntimeException("Cliente não existe"));
-        return getClienteResponseDto(clientePutRequestDto, clienteSalvo);
+        verificaDadosDeAtualizacao(clientePutRequestDto, clienteSalvo);
+        clienteRepository.save(clienteSalvo);
+        return ClienteConverter.toClienteResponseDto(clienteSalvo);
     }
     public ClienteResponseDto atualizarPorCpf(ClientePutRequestDto clientePutRequestDto, String cpf){
         Cliente clienteSalvo = clienteRepository.buscaClientePorDocumento(cpf)
                 .orElseThrow(() -> new RuntimeException("Cliente não existe"));
-        return getClienteResponseDto(clientePutRequestDto, clienteSalvo);
+        verificaDadosDeAtualizacao(clientePutRequestDto, clienteSalvo);
+        clienteRepository.save(clienteSalvo);
+        return ClienteConverter.toClienteResponseDto(clienteSalvo);
     }
 
     public ClienteResponseDto atualizarPorEmail(ClientePutRequestDto clientePutRequestDto, String email){
         Cliente clienteSalvo = clienteRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Cliente não existe"));
-        return getClienteResponseDto(clientePutRequestDto, clienteSalvo);
+        verificaDadosDeAtualizacao(clientePutRequestDto, clienteSalvo);
+        clienteRepository.save(clienteSalvo);
+        return ClienteConverter.toClienteResponseDto(clienteSalvo);
     }
 
-    private ClienteResponseDto getClienteResponseDto(ClientePutRequestDto clientePutRequestDto, Cliente clienteSalvo) {
+    private void verificaDadosDeAtualizacao(ClientePutRequestDto clientePutRequestDto, Cliente clienteSalvo) {
         clienteSalvo.setNome(clientePutRequestDto.getNome() == null ? clienteSalvo.getNome() : clientePutRequestDto.getNome());
         clienteSalvo.setTelefone(clientePutRequestDto.getTelefone() == null ? clienteSalvo.getTelefone() : clientePutRequestDto.getTelefone());
         clienteSalvo.setEndereco(clientePutRequestDto.getEndereco() == null ? clienteSalvo.getEndereco() : clientePutRequestDto.getEndereco());
         clienteSalvo.setEmail(clientePutRequestDto.getEmail() == null ? clienteSalvo.getEmail() : clientePutRequestDto.getEmail());
-        clienteRepository.save(clienteSalvo);
-        return ClienteConverter.toClienteResponseDto(clienteSalvo);
     }
 }
