@@ -46,7 +46,7 @@ public class ClienteController {
 
     @GetMapping("/email/{email}")
     @ResponseStatus(HttpStatus.OK)
-    public Cliente consultarPorEmail(@PathVariable("email") String email) {
+    public ClienteResponseDto consultarPorEmail(@PathVariable("email") String email) {
         return clienteService.consultarPorEmail(email);
     }
 

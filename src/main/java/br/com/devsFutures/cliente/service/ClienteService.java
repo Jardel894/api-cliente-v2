@@ -21,7 +21,7 @@ public interface ClienteService {
 
      Cliente consultarPorCpf(String cpf);
 
-     Cliente consultarPorEmail(String email);
+     ClienteResponseDto consultarPorEmail(String email);
 
      void excluirPorCpf(String cpf);
 

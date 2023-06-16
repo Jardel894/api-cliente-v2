@@ -54,9 +54,10 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente consultarPorEmail(String email) {
-        return clienteRepository.findByEmail(email)
+    public ClienteResponseDto consultarPorEmail(String email) {
+        Cliente cliente = clienteRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado por email: " + email));
+        return ClienteConverter.toClienteResponseDto(cliente);
     }
 
     @Override
