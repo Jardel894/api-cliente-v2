@@ -40,7 +40,7 @@ public class ClienteController {
 
     @GetMapping("/cpf/{cpf}")
     @ResponseStatus(HttpStatus.OK)
-    public Cliente consultarPorCpf(@PathVariable("cpf") String cpf) {
+    public ClienteResponseDto consultarPorCpf(@PathVariable("cpf") String cpf) {
         return clienteService.consultarPorCpf(cpf);
     }
 
