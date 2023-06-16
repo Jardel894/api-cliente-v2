@@ -48,9 +48,10 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente consultarPorCpf(String cpf) {
-        return clienteRepository.buscaClientePorDocumento(cpf)
+    public ClienteResponseDto consultarPorCpf(String cpf) {
+        Cliente cliente =clienteRepository.buscaClientePorDocumento(cpf)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado pelo cpf: " + cpf));
+        return ClienteConverter.toClienteResponseDto(cliente);
     }
 
     @Override

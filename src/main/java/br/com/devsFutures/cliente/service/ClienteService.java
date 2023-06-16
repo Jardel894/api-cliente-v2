@@ -19,7 +19,7 @@ public interface ClienteService {
 
      ClienteResponseDto consultarPorUuid(UUID uuid);
 
-     Cliente consultarPorCpf(String cpf);
+     ClienteResponseDto consultarPorCpf(String cpf);
 
      Cliente consultarPorEmail(String email);
 
