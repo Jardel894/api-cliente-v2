@@ -17,7 +17,7 @@ public interface ClienteService {
 
     PageDto<ClienteResponseDto> consultar(Pageable pageable);
 
-     Cliente consultarPorUuid(UUID uuid);
+     ClienteResponseDto consultarPorUuid(UUID uuid);
 
      Cliente consultarPorCpf(String cpf);
 
