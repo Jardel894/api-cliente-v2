@@ -41,9 +41,10 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Cliente consultarPorUuid(UUID uuid) {
-        return clienteRepository.findById(uuid)
+    public ClienteResponseDto consultarPorUuid(UUID uuid) {
+        Cliente cliente = clienteRepository.findById(uuid)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado por uuid: " + uuid));
+        return ClienteConverter.toClienteResponseDto(cliente);
     }
 
     @Override

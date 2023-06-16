@@ -34,7 +34,7 @@ public class ClienteController {
 
     @GetMapping("/uuid/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public Cliente consultarPorUuid(@PathVariable("uuid") UUID uuid) {
+    public ClienteResponseDto consultarPorUuid(@PathVariable("uuid") UUID uuid) {
         return clienteService.consultarPorUuid(uuid);
     }
 
