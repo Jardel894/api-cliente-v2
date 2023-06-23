@@ -20,14 +20,6 @@ public class ClienteConverter {
                 .cpf(clienteNovoRequestDto.getCpf())
                 .email(clienteNovoRequestDto.getEmail())
                 .telefone(clienteNovoRequestDto.getTelefone())
-//                .endereco(Endereco.builder()
-//                        .bairro(clienteNovoRequestDto.getEndereco().getBairro())
-//                        .cep(clienteNovoRequestDto.getEndereco().getCep())
-//                        .complemento(clienteNovoRequestDto.getEndereco().getComplemento())
-//                        .uf(clienteNovoRequestDto.getEndereco().getUf())
-//                        .localidade(clienteNovoRequestDto.getEndereco().getLocalidade())
-//                        .logradouro(clienteNovoRequestDto.getEndereco().getLogradouro())
-//                        .build())
                 .build();
     }
 

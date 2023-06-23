@@ -124,7 +124,6 @@ public class ClienteServiceImpl implements ClienteService {
     private void verificaDadosDeAtualizacao(ClientePutRequestDto clientePutRequestDto, Cliente clienteSalvo) {
         clienteSalvo.setNome(clientePutRequestDto.getNome() == null ? clienteSalvo.getNome() : clientePutRequestDto.getNome());
         clienteSalvo.setTelefone(clientePutRequestDto.getTelefone() == null ? clienteSalvo.getTelefone() : clientePutRequestDto.getTelefone());
-//        clienteSalvo.setEndereco(clientePutRequestDto.getEndereco() == null ? clienteSalvo.getEndereco() : clientePutRequestDto.getEndereco());
         clienteSalvo.setEmail(clientePutRequestDto.getEmail() == null ? clienteSalvo.getEmail() : clientePutRequestDto.getEmail());
     }
 }
