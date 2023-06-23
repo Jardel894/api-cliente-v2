@@ -6,7 +6,9 @@ import br.com.devsFutures.cliente.dto.request.ClientePutRequestDto;
 import br.com.devsFutures.cliente.dto.response.ClienteResponseDto;
 import br.com.devsFutures.cliente.dto.response.PageDto;
 import br.com.devsFutures.cliente.entities.Cliente;
+import br.com.devsFutures.cliente.entities.Endereco;
 import br.com.devsFutures.cliente.repository.ClienteRepository;
+import br.com.devsFutures.cliente.repository.EnderecoRepository;
 import br.com.devsFutures.cliente.service.ClienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,10 +26,26 @@ public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository clienteRepository;
 
+    private final EnderecoRepository enderecoRepository;
+
     @Override
+    @Transactional
     public ClienteResponseDto criar(ClienteNovoRequestDto clienteNovoRequestDto) {
         Cliente cliente = ClienteConverter.toCliente(clienteNovoRequestDto);
         clienteRepository.save(cliente);
+        Endereco endereco =
+        Endereco.builder()
+                .cliente(cliente)
+                .cep(clienteNovoRequestDto.getEndereco().getCep())
+                .bairro(clienteNovoRequestDto.getEndereco().getBairro())
+                .logradouro(clienteNovoRequestDto.getEndereco().getLogradouro())
+                .uf(clienteNovoRequestDto.getEndereco().getUf())
+                .localidade(clienteNovoRequestDto.getEndereco().getLocalidade())
+                .numero(clienteNovoRequestDto.getEndereco().getNumero())
+                .complemento(clienteNovoRequestDto.getEndereco().getComplemento())
+                .build();
+        enderecoRepository.save(endereco);
+        cliente.setEndereco(endereco);
         return ClienteConverter.toClienteResponseDto(cliente);
     }
 
@@ -106,7 +124,6 @@ public class ClienteServiceImpl implements ClienteService {
     private void verificaDadosDeAtualizacao(ClientePutRequestDto clientePutRequestDto, Cliente clienteSalvo) {
         clienteSalvo.setNome(clientePutRequestDto.getNome() == null ? clienteSalvo.getNome() : clientePutRequestDto.getNome());
         clienteSalvo.setTelefone(clientePutRequestDto.getTelefone() == null ? clienteSalvo.getTelefone() : clientePutRequestDto.getTelefone());
-        clienteSalvo.setEndereco(clientePutRequestDto.getEndereco() == null ? clienteSalvo.getEndereco() : clientePutRequestDto.getEndereco());
         clienteSalvo.setEmail(clientePutRequestDto.getEmail() == null ? clienteSalvo.getEmail() : clientePutRequestDto.getEmail());
     }
 }
