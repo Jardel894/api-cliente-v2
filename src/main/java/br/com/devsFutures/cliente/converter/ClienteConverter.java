@@ -28,15 +28,7 @@ public class ClienteConverter {
                 .nome(cliente.getNome())
                 .cpf(cliente.getCpf())
                 .email(cliente.getEmail())
-                .endereco(EnderecoResponse.builder()
-                        .bairro(cliente.getEndereco().getBairro())
-                        .cep(cliente.getEndereco().getCep())
-                        .complemento(cliente.getEndereco().getComplemento())
-                        .uf(cliente.getEndereco().getUf())
-                        .localidade(cliente.getEndereco().getLocalidade())
-                        .logradouro(cliente.getEndereco().getLogradouro())
-                        .numero(cliente.getEndereco().getNumero())
-                        .build())
+                .endereco(EnderecoConverter.toEnderecoResponseDto(cliente.getEndereco()))
                 .telefone(cliente.getTelefone())
                 .build();
     }
