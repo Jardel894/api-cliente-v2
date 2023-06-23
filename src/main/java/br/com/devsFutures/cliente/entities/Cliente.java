@@ -27,8 +27,9 @@ public class Cliente {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
-    private String endereco;
+    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Endereco endereco;
 
     @Column(nullable = false)
     private String telefone;

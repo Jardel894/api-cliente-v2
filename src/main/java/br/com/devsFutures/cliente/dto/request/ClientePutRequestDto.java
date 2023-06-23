@@ -9,7 +9,7 @@ import lombok.*;
 public class ClientePutRequestDto {
 
     private String nome;
-    private String endereco;
+    private EnderecoRequest endereco;
     private String email;
     private String telefone;
 }

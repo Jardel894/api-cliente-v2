@@ -3,8 +3,10 @@ package br.com.devsFutures.cliente.converter;
 import br.com.devsFutures.cliente.dto.request.ClienteNovoRequestDto;
 import br.com.devsFutures.cliente.dto.response.ClienteResponseDto;
 import br.com.devsFutures.cliente.dto.response.CustomPageDto;
+import br.com.devsFutures.cliente.dto.response.EnderecoResponse;
 import br.com.devsFutures.cliente.dto.response.PageDto;
 import br.com.devsFutures.cliente.entities.Cliente;
+import br.com.devsFutures.cliente.entities.Endereco;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -18,7 +20,14 @@ public class ClienteConverter {
                 .cpf(clienteNovoRequestDto.getCpf())
                 .email(clienteNovoRequestDto.getEmail())
                 .telefone(clienteNovoRequestDto.getTelefone())
-                .endereco(clienteNovoRequestDto.getEndereco())
+//                .endereco(Endereco.builder()
+//                        .bairro(clienteNovoRequestDto.getEndereco().getBairro())
+//                        .cep(clienteNovoRequestDto.getEndereco().getCep())
+//                        .complemento(clienteNovoRequestDto.getEndereco().getComplemento())
+//                        .uf(clienteNovoRequestDto.getEndereco().getUf())
+//                        .localidade(clienteNovoRequestDto.getEndereco().getLocalidade())
+//                        .logradouro(clienteNovoRequestDto.getEndereco().getLogradouro())
+//                        .build())
                 .build();
     }
 
@@ -27,7 +36,15 @@ public class ClienteConverter {
                 .nome(cliente.getNome())
                 .cpf(cliente.getCpf())
                 .email(cliente.getEmail())
-                .endereco(cliente.getEndereco())
+                .endereco(EnderecoResponse.builder()
+                        .bairro(cliente.getEndereco().getBairro())
+                        .cep(cliente.getEndereco().getCep())
+                        .complemento(cliente.getEndereco().getComplemento())
+                        .uf(cliente.getEndereco().getUf())
+                        .localidade(cliente.getEndereco().getLocalidade())
+                        .logradouro(cliente.getEndereco().getLogradouro())
+                        .numero(cliente.getEndereco().getNumero())
+                        .build())
                 .telefone(cliente.getTelefone())
                 .build();
     }
@@ -40,7 +57,15 @@ public class ClienteConverter {
                 .map(cliente -> ClienteResponseDto.builder()
                         .nome(cliente.getNome())
                         .cpf(cliente.getCpf())
-                        .endereco(cliente.getEndereco())
+                        .endereco(EnderecoResponse.builder()
+                                .bairro(cliente.getEndereco().getBairro())
+                                .cep(cliente.getEndereco().getCep())
+                                .complemento(cliente.getEndereco().getComplemento())
+                                .uf(cliente.getEndereco().getUf())
+                                .localidade(cliente.getEndereco().getLocalidade())
+                                .logradouro(cliente.getEndereco().getLogradouro())
+                                .numero(cliente.getEndereco().getNumero())
+                                .build())
                         .email(cliente.getEmail())
                         .telefone(cliente.getTelefone())
                         .build()).collect(Collectors.toList());
