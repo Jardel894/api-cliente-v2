@@ -1,6 +1,7 @@
 package br.com.devsFutures.cliente.service.serviceImpl;
 
 import br.com.devsFutures.cliente.converter.ClienteConverter;
+import br.com.devsFutures.cliente.converter.EnderecoConverter;
 import br.com.devsFutures.cliente.dto.request.ClienteNovoRequestDto;
 import br.com.devsFutures.cliente.dto.request.ClientePutRequestDto;
 import br.com.devsFutures.cliente.dto.response.ClienteResponseDto;
@@ -33,17 +34,7 @@ public class ClienteServiceImpl implements ClienteService {
     public ClienteResponseDto criar(ClienteNovoRequestDto clienteNovoRequestDto) {
         Cliente cliente = ClienteConverter.toCliente(clienteNovoRequestDto);
         clienteRepository.save(cliente);
-        Endereco endereco =
-        Endereco.builder()
-                .cliente(cliente)
-                .cep(clienteNovoRequestDto.getEndereco().getCep())
-                .bairro(clienteNovoRequestDto.getEndereco().getBairro())
-                .logradouro(clienteNovoRequestDto.getEndereco().getLogradouro())
-                .uf(clienteNovoRequestDto.getEndereco().getUf())
-                .localidade(clienteNovoRequestDto.getEndereco().getLocalidade())
-                .numero(clienteNovoRequestDto.getEndereco().getNumero())
-                .complemento(clienteNovoRequestDto.getEndereco().getComplemento())
-                .build();
+        Endereco endereco = EnderecoConverter.toEndereco(clienteNovoRequestDto.getEndereco(), cliente);
         enderecoRepository.save(endereco);
         cliente.setEndereco(endereco);
         return ClienteConverter.toClienteResponseDto(cliente);
@@ -67,7 +58,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public ClienteResponseDto consultarPorCpf(String cpf) {
-        Cliente cliente =clienteRepository.buscaClientePorDocumento(cpf)
+        Cliente cliente = clienteRepository.buscaClientePorDocumento(cpf)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado pelo cpf: " + cpf));
         return ClienteConverter.toClienteResponseDto(cliente);
     }
