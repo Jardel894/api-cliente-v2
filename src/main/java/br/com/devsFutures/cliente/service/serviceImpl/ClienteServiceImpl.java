@@ -114,7 +114,8 @@ public class ClienteServiceImpl implements ClienteService {
 
     private void verificaDadosDeAtualizacao(ClientePutRequestDto clientePutRequestDto, Cliente clienteSalvo) {
         clienteSalvo.setNome(clientePutRequestDto.getNome() == null ? clienteSalvo.getNome() : clientePutRequestDto.getNome());
-        clienteSalvo.setTelefone(clientePutRequestDto.getTelefone() == null ? clienteSalvo.getTelefone() : clientePutRequestDto.getTelefone());
+        //TODO - Aplicar Lógica para Atualização de Telefone
+        /*clienteSalvo.setTelefoneList(clientePutRequestDto.getTelefone() == null ? clienteSalvo.getTelefoneList() : clientePutRequestDto.getTelefone());*/
         clienteSalvo.setEmail(clientePutRequestDto.getEmail() == null ? clienteSalvo.getEmail() : clientePutRequestDto.getEmail());
     }
 }

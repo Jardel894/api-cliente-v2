@@ -3,6 +3,7 @@ package br.com.devsFutures.cliente.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -31,6 +32,8 @@ public class Cliente {
     @PrimaryKeyJoinColumn
     private Endereco endereco;
 
-    @Column(nullable = false)
-    private String telefone;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id")
+    private List<Telefone> telefoneList;
+
 }
