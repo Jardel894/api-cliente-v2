@@ -4,13 +4,16 @@ import br.com.devsFutures.cliente.dto.request.EnderecoRequest;
 import br.com.devsFutures.cliente.dto.response.EnderecoResponse;
 import br.com.devsFutures.cliente.entities.Cliente;
 import br.com.devsFutures.cliente.entities.Endereco;
+import org.springframework.util.ObjectUtils;
 
 public class EnderecoConverter {
 
     public static Endereco toEndereco(EnderecoRequest enderecoRequest, Cliente cliente) {
+        if (ObjectUtils.isEmpty(enderecoRequest) || ObjectUtils.isEmpty(cliente)){
+            return null;
+        }
 
         return Endereco.builder()
-                .cliente(cliente)
                 .bairro(enderecoRequest.getBairro())
                 .cep(enderecoRequest.getCep())
                 .uf(enderecoRequest.getUf())
@@ -22,6 +25,9 @@ public class EnderecoConverter {
     }
 
     public static EnderecoResponse toEnderecoResponseDto(Endereco endereco) {
+        if (ObjectUtils.isEmpty(endereco)){
+            return null;
+        }
 
         return EnderecoResponse.builder()
                 .bairro(endereco.getBairro())
@@ -32,7 +38,5 @@ public class EnderecoConverter {
                 .logradouro(endereco.getLogradouro())
                 .numero(endereco.getNumero())
                 .build();
-
-
     }
 }

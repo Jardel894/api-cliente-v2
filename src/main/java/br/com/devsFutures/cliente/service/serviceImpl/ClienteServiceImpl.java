@@ -1,15 +1,13 @@
 package br.com.devsFutures.cliente.service.serviceImpl;
 
 import br.com.devsFutures.cliente.converter.ClienteConverter;
-import br.com.devsFutures.cliente.converter.EnderecoConverter;
 import br.com.devsFutures.cliente.dto.request.ClienteNovoRequestDto;
 import br.com.devsFutures.cliente.dto.request.ClientePutRequestDto;
 import br.com.devsFutures.cliente.dto.response.ClienteResponseDto;
 import br.com.devsFutures.cliente.dto.response.PageDto;
 import br.com.devsFutures.cliente.entities.Cliente;
-import br.com.devsFutures.cliente.entities.Endereco;
+import br.com.devsFutures.cliente.entities.Telefone;
 import br.com.devsFutures.cliente.repository.ClienteRepository;
-import br.com.devsFutures.cliente.repository.EnderecoRepository;
 import br.com.devsFutures.cliente.service.ClienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,7 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,16 +28,12 @@ public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository clienteRepository;
 
-    private final EnderecoRepository enderecoRepository;
-
     @Override
     @Transactional
     public ClienteResponseDto criar(ClienteNovoRequestDto clienteNovoRequestDto) {
         Cliente cliente = ClienteConverter.toCliente(clienteNovoRequestDto);
         clienteRepository.save(cliente);
-        Endereco endereco = EnderecoConverter.toEndereco(clienteNovoRequestDto.getEndereco(), cliente);
-        enderecoRepository.save(endereco);
-        cliente.setEndereco(endereco);
+
         return ClienteConverter.toClienteResponseDto(cliente);
     }
 
@@ -51,8 +48,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public ClienteResponseDto consultarPorUuid(UUID uuid) {
-        Cliente cliente = clienteRepository.findById(uuid)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado por uuid: " + uuid));
+        Cliente cliente = getCliente(uuid);
         return ClienteConverter.toClienteResponseDto(cliente);
     }
 
@@ -89,17 +85,19 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     public ClienteResponseDto atualizarPorUuid(ClientePutRequestDto clientePutRequestDto, UUID uuid) {
-        Cliente clienteSalvo = clienteRepository.findById(uuid)
-                .orElseThrow(() -> new RuntimeException("Cliente não existe"));
-        verificaDadosDeAtualizacao(clientePutRequestDto, clienteSalvo);
+        Cliente clienteSalvo = getCliente(uuid);
+
+        atualizarDados(clientePutRequestDto, clienteSalvo);
+
         clienteRepository.save(clienteSalvo);
+
         return ClienteConverter.toClienteResponseDto(clienteSalvo);
     }
 
     public ClienteResponseDto atualizarPorCpf(ClientePutRequestDto clientePutRequestDto, String cpf) {
         Cliente clienteSalvo = clienteRepository.buscaClientePorDocumento(cpf)
                 .orElseThrow(() -> new RuntimeException("Cliente não existe"));
-        verificaDadosDeAtualizacao(clientePutRequestDto, clienteSalvo);
+        atualizarDados(clientePutRequestDto, clienteSalvo);
         clienteRepository.save(clienteSalvo);
         return ClienteConverter.toClienteResponseDto(clienteSalvo);
     }
@@ -107,14 +105,35 @@ public class ClienteServiceImpl implements ClienteService {
     public ClienteResponseDto atualizarPorEmail(ClientePutRequestDto clientePutRequestDto, String email) {
         Cliente clienteSalvo = clienteRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Cliente não existe"));
-        verificaDadosDeAtualizacao(clientePutRequestDto, clienteSalvo);
+        atualizarDados(clientePutRequestDto, clienteSalvo);
         clienteRepository.save(clienteSalvo);
         return ClienteConverter.toClienteResponseDto(clienteSalvo);
     }
 
-    private void verificaDadosDeAtualizacao(ClientePutRequestDto clientePutRequestDto, Cliente clienteSalvo) {
+    //TODO - Realizar Testes via POSTMAN com esse metodo
+    private void atualizarDados(ClientePutRequestDto clientePutRequestDto, Cliente clienteSalvo) {
         clienteSalvo.setNome(clientePutRequestDto.getNome() == null ? clienteSalvo.getNome() : clientePutRequestDto.getNome());
-        clienteSalvo.setTelefone(clientePutRequestDto.getTelefone() == null ? clienteSalvo.getTelefone() : clientePutRequestDto.getTelefone());
         clienteSalvo.setEmail(clientePutRequestDto.getEmail() == null ? clienteSalvo.getEmail() : clientePutRequestDto.getEmail());
+
+        if (!CollectionUtils.isEmpty(clientePutRequestDto.getTelefones())) {
+            List<Telefone> telefoneList = clientePutRequestDto.getTelefones()
+                    .stream()
+                    .map(telefone -> Telefone.builder()
+                            .ddd(telefone.getDdd())
+                            .numero(telefone.getNumero())
+                            .telefoneTipo(telefone.getTelefoneTipo())
+                            .build())
+                    .toList();
+            clienteSalvo.setTelefoneList(telefoneList);
+        }
+        if (!ObjectUtils.isEmpty(clientePutRequestDto.getEndereco())){
+            clienteSalvo.setEndereco(clientePutRequestDto.getEndereco().to());
+        }
+
     }
+
+    private Cliente getCliente(UUID uuid) {
+        return clienteRepository.findById(uuid).orElseThrow(() -> new RuntimeException("Cliente não existe"));
+    }
+
 }

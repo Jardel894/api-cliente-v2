@@ -1,10 +1,11 @@
 package br.com.devsFutures.cliente.dto.request;
 
-import br.com.devsFutures.cliente.entities.Endereco;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -16,6 +17,6 @@ public class ClienteNovoRequestDto {
     private String cpf;
     private String email;
     private EnderecoRequest endereco;
-    private String telefone;
+    private List<TelefoneRequestDto> telefones;
 
 }

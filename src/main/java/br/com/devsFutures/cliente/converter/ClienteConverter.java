@@ -1,12 +1,13 @@
 package br.com.devsFutures.cliente.converter;
 
 import br.com.devsFutures.cliente.dto.request.ClienteNovoRequestDto;
+import br.com.devsFutures.cliente.dto.request.TelefoneRequestDto;
 import br.com.devsFutures.cliente.dto.response.ClienteResponseDto;
 import br.com.devsFutures.cliente.dto.response.CustomPageDto;
 import br.com.devsFutures.cliente.dto.response.EnderecoResponse;
 import br.com.devsFutures.cliente.dto.response.PageDto;
+import br.com.devsFutures.cliente.dto.response.TelefoneResponseDto;
 import br.com.devsFutures.cliente.entities.Cliente;
-import br.com.devsFutures.cliente.entities.Endereco;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -19,7 +20,8 @@ public class ClienteConverter {
                 .nome(clienteNovoRequestDto.getNome())
                 .cpf(clienteNovoRequestDto.getCpf())
                 .email(clienteNovoRequestDto.getEmail())
-                .telefone(clienteNovoRequestDto.getTelefone())
+                .endereco(clienteNovoRequestDto.getEndereco().to())
+                .telefoneList(TelefoneRequestDto.toTelefoneList(clienteNovoRequestDto.getTelefones()))
                 .build();
     }
 
@@ -29,7 +31,7 @@ public class ClienteConverter {
                 .cpf(cliente.getCpf())
                 .email(cliente.getEmail())
                 .endereco(EnderecoConverter.toEnderecoResponseDto(cliente.getEndereco()))
-                .telefone(cliente.getTelefone())
+                .telefones(TelefoneResponseDto.toTelefoneResponseDtoList(cliente.getTelefoneList()))
                 .build();
     }
 
@@ -51,7 +53,7 @@ public class ClienteConverter {
                                 .numero(cliente.getEndereco().getNumero())
                                 .build())
                         .email(cliente.getEmail())
-                        .telefone(cliente.getTelefone())
+                        .telefones(TelefoneResponseDto.toTelefoneResponseDtoList(cliente.getTelefoneList()))
                         .build()).collect(Collectors.toList());
 
         clienteResponseDtos.setContent(responseDtos);
