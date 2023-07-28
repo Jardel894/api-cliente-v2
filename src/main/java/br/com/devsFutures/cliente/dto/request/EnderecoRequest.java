@@ -1,6 +1,11 @@
 package br.com.devsFutures.cliente.dto.request;
 
-import lombok.*;
+import br.com.devsFutures.cliente.entities.Endereco;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Builder
@@ -9,7 +14,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EnderecoRequest {
-
 
     private String cep;
 
@@ -24,5 +28,17 @@ public class EnderecoRequest {
     private String uf;
 
     private Integer numero;
+
+    public Endereco to(){
+        return Endereco.builder()
+                .logradouro(this.logradouro)
+                .numero(this.numero)
+                .bairro(this.bairro)
+                .cep(this.cep)
+                .uf(this.uf)
+                .localidade(this.localidade)
+                .complemento(this.complemento)
+                .build();
+    }
 
 }

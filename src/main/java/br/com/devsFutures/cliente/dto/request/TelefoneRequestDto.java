@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -28,6 +29,10 @@ public class TelefoneRequestDto {
     private TelefoneTipoEnum telefoneTipo;
 
     public static List<Telefone> toTelefoneList(List<TelefoneRequestDto> telefoneRequestDtoList) {
+        if(CollectionUtils.isEmpty(telefoneRequestDtoList)){
+            return null;
+        }
+
         return telefoneRequestDtoList.stream()
                 .map(TelefoneRequestDto::toTelefone)
                 .toList();

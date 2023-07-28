@@ -20,6 +20,7 @@ public class ClienteConverter {
                 .nome(clienteNovoRequestDto.getNome())
                 .cpf(clienteNovoRequestDto.getCpf())
                 .email(clienteNovoRequestDto.getEmail())
+                .endereco(clienteNovoRequestDto.getEndereco().to())
                 .telefoneList(TelefoneRequestDto.toTelefoneList(clienteNovoRequestDto.getTelefones()))
                 .build();
     }
